@@ -1,17 +1,13 @@
 # MIGS-for-events-manager-pro
-This is a wordpress plugin coded to facilitate MIGS payment gateway ( for any bank support this) to events manager Pro Plugin.So this plugin requires Events Manager pro to be active.
-If you found it usefull <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-<input type="hidden" name="cmd" value="_s-xclick">
-<input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----
-">
-<input type="image" src="http://s31.postimg.org/jhieq2son/icon.png" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
-</form>
 
+This is a wordpress plugin coded to facilitate MIGS payment gateway ( for any bank support this) to events manager Pro Plugin.So this plugin requires Events Manager pro to be active.
 You can download event Manager Pro Plugin from here https://eventsmanagerpro.com/gopro/
+<a style="float:right;" href='https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=HKKULE37BHXSN&lc=LK&item_name=Buy%20me%20a%20Drink&item_number=MIGS%20PAY&currency_code=USD&bn=PP%2dDonationsBF%3aicon%2epng%3aNonHosted' target='_blank'><img style="float:right;" src='http://s31.postimg.org/jhieq2son/icon.png' border='0' alt="icon" /></a><br>
 
 i first wrote this code as a try.so lots of implementations and modifications needs to be done.
 I followed the sample paypal gateway in events Manager Pro plugin as they have instructed.
 Any modifications or help will be highly appreciated.
 At the moment the values are hardcoded but the admin panal settings are there to set.I'll try to modify them soon.
+
+
 
