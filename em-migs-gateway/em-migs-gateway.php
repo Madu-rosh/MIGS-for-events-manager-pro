@@ -3,7 +3,7 @@
  * Plugin Name: MIGS gateway for Events Manager Pro-edited
  * Plugin URI: http://rkvisit.blogspot.com
  * Description: hsbc payment gate way implementation for Events Manager Pro.
- * Version: 1.0.0
+ * Version: 1.2.0
  * Author: Roshan Karunarathna
  * Author URI: http://rkvisit.blogspot.com
  * 
@@ -72,7 +72,9 @@ class EM_Gateway_Migs extends EM_Gateway {
 				$return['message'] = get_option('em_migs_booking_feedback');	
 				$migs_url = $this->get_migs_url();	
 				$migs_vars = $this->get_migs_vars($EM_Booking);	
-				$md5Hash = "XXXXXXXXXXXXXXXXXXXXXXXXXXX";
+				//$md5Hash = "XXXXXXXXXXXXXXXXXXXXXXXXXXX";
+				$securehash="XXXXXXXXXXXXXXXXXXXXXXXXXXX";
+				$sha256="";
 				$final=array(	
 					'vpc_Version' => $migs_vars['vpc_Version'],
 					'vpc_Command' => $migs_vars['vpc_Command'],
@@ -94,11 +96,16 @@ class EM_Gateway_Migs extends EM_Gateway {
 						} else {
 							$service_host .= '&' . urlencode( $key ) . "=" . urlencode( $value );
 						}
-						$md5Hash .= $value;
+						//$md5Hash .= $value;
+						$sha256 .= $key ."=". $value ."&";
 					}
 				}
-				$migs_vars['vpc_SecureHash']=strtoupper( md5( $md5Hash ) );								
-				$final['vpc_SecureHash']=strtoupper( md5( $md5Hash ) );								
+				$sha256=rtrim($sha256,"&");
+				//$migs_vars['vpc_SecureHash']=strtoupper( md5( $md5Hash ) );								
+				//$final['vpc_SecureHash']=strtoupper( md5( $md5Hash ) );	
+                $migs_vars['vpc_SecureHash']=strtoupper( hash_hmac( 'SHA256', $sha256, pack( "H*", $securehash ) ) );$final['vpc_SecureHash']=strtoupper( hash_hmac( 'SHA256', $sha256, pack( "H*", $securehash ) ) );
+                $migs_vars['vpc_SecureHashType']='SHA256';				
+                $final['vpc_SecureHashType']='SHA256';				
 				$migs_return = array('migs_url'=>$migs_url, 'migs_vars'=>$final);
 				$return = array_merge($return, $migs_return);
 				
@@ -158,7 +165,9 @@ class EM_Gateway_Migs extends EM_Gateway {
 		    if( $pending_payments == 0 ){
 				//user owes money!
 				$paypal_vars = $this->get_migs_vars($EM_Booking);
-				$md5Hash = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
+				//$md5Hash = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
+				$securehash="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
+				$sha256="";
 				$final=array(	
 					'vpc_Version' => $migs_vars['vpc_Version'],
 					'vpc_Command' => $migs_vars['vpc_Command'],
@@ -180,11 +189,17 @@ class EM_Gateway_Migs extends EM_Gateway {
 						} else {
 							$service_host .= '&' . urlencode( $key ) . "=" . urlencode( $value );
 						}
-						$md5Hash .= $value;
+						//$md5Hash .= $value;
+						$sha256 .= $key ."=". $value ."&";
 					}
 				}
-				$migs_vars['vpc_SecureHash']=strtoupper( md5( $md5Hash ) );								
-				$final['vpc_SecureHash']=strtoupper( md5( $md5Hash ) );		
+				$sha256=rtrim($sha256,"&");
+				/*$migs_vars['vpc_SecureHash']=strtoupper( md5( $md5Hash ) );								
+				$final['vpc_SecureHash']=strtoupper( md5( $md5Hash ) );	*/
+				$migs_vars['vpc_SecureHash']=strtoupper( hash_hmac( 'SHA256', $sha256, pack( "H*", $securehash ) ) );
+				$final['vpc_SecureHash']=strtoupper( hash_hmac( 'SHA256', $sha256, pack( "H*", $securehash ) ) );
+                $migs_vars['vpc_SecureHashType']='SHA256';				
+                $final['vpc_SecureHashType']='SHA256';				
 				$form = '<form action="'.$this->get_migs_url().'" method="post">';
 				foreach($final as $key=>$value){
 					$form .= '<input type="hidden" name="'.$key.'" value="'.$value.'" />';
@@ -340,7 +355,8 @@ class EM_Gateway_Migs extends EM_Gateway {
 			global $wpdb;
 			$authorised = false;
 			
-			$md5Hash = "XXXXXXXXXXXXXXXXXXXXXXXXXXX";
+			//$md5Hash = "XXXXXXXXXXXXXXXXXXXXXXXXXXX";
+			$securehash="XXXXXXXXXXXXXXXXXXXXXXXXXXX";
 			$txnSecureHash = $_REQUEST['vpc_SecureHash'];	
 			$info=$this->responseDescription($_REQUEST['vpc_TxnResponseCode']);			
 			$order_id = explode( '_', $_REQUEST['vpc_MerchTxnRef'] );
@@ -360,13 +376,16 @@ class EM_Gateway_Migs extends EM_Gateway {
 				
 			
 				foreach( $_REQUEST as $key => $value ) {
-					if($key != "vpc_SecureHash" || $key!='action' || $key!='em_payment_gateway')
-					{
+					//if($key != "vpc_SecureHash" || $key!='action' || $key!='em_payment_gateway')
+					if (($key!="vpc_SecureHash" || $key!='action' || $key!='em_payment_gateway')&& ($key != "vpc_SecureHashType") && ((substr($key, 0,4)=="vpc_") || (substr($key,0,5) =="user_"))) {
 						if (strlen( $value ) > 0) {
-							$md5Hash .= $value;
+							//$md5Hash .= $value;
+							$sha256 .= $key . "=" . $value . "&";
 						}
 					}
 				}
+				$sha256=rtrim($sha256,"&");
+				$sha256=strtoupper(hash_hmac('SHA256',$sha256, pack("H*",$securehash)));
 			
 				/*if ( strtoupper( $txnSecureHash ) != strtoupper( md5( $md5Hash )) ) {
 					$authorised = false;
