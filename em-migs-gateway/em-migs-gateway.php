@@ -372,7 +372,7 @@ class EM_Gateway_Migs extends EM_Gateway {
 			$msg['class']   = 'error';
 			$msg['message'] = "Thank you for shopping with us. However, the transaction has been declined.";
 			
-			if ( strlen($md5Hash) > 0 && $_REQUEST['vpc_TxnResponseCode'] != "7" && $_REQUEST['vpc_TxnResponseCode'] != "No Value Returned") {
+			if ( strlen($securehash) > 0 && $_REQUEST['vpc_TxnResponseCode'] != "7" && $_REQUEST['vpc_TxnResponseCode'] != "No Value Returned") {
 				
 			
 				foreach( $_REQUEST as $key => $value ) {
