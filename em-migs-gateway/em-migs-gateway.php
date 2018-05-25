@@ -2,7 +2,7 @@
 /**
  * Plugin Name: MIGS gateway for Events Manager Pro-edited
  * Plugin URI: http://rkvisit.blogspot.com
- * Description: hsbc payment gate way implementation for Events Manager Pro.
+ * Description: migs payment gate way implementation for Events Manager Pro.
  * Version: 1.2.0
  * Author: Roshan Karunarathna
  * Author URI: http://rkvisit.blogspot.com
