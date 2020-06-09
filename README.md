@@ -9,7 +9,7 @@ I followed the sample paypal gateway in events Manager Pro plugin as they have i
 Any modifications or help will be highly appreciated.
 At the moment the values are hardcoded but the admin panal settings are there to set.I'll try to modify them soon.
 
-Appriciate the effort help me: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=V7CYQD2WJQBCQ&source=url
+Appriciate the effort help me: <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=V7CYQD2WJQBCQ&source=url"><img src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif"></a>
 
 
 
